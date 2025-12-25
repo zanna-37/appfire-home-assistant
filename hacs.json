@@ -1,6 +1,6 @@
 {
   "filename": "appfire.zip",
-  "homeassistant": "2023.11.0",
+  "homeassistant": "2024.4.0",
   "name": "Appfire Home Assistant",
   "render_readme": true,
   "zip_release": true

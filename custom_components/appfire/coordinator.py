@@ -1,17 +1,13 @@
-"""Platform for number integration."""
+"""Data coordinator for AppFire integration."""
 from __future__ import annotations
-from homeassistant.components.light import LightEntity
-from homeassistant.core import callback
-from homeassistant.exceptions import ConfigEntryAuthFailed
+
+import logging
+from datetime import timedelta
+
 from homeassistant.helpers.update_coordinator import (
-    CoordinatorEntity,
     DataUpdateCoordinator,
     UpdateFailed,
 )
-from datetime import timedelta
-import logging
-
-from .const import DOMAIN
 
 from .const import API_DATA_LOOKUP_STOVE_STATUS
 from .const import API_DATA_LOOKUP_POWER_STATUS
@@ -24,8 +20,6 @@ from .const import API_DATA_LOOKUP_SMOKE_TEMPERATURE
 from .const import API_DATA_LOOKUP_POWER_PERCENTAGE
 from .const import API_DATA_LOOKUP_SMOKE_FAN_RPM
 from .const import API_DATA_LOOKUP_FAN1_PERCENTAGE
-
-from .lib.appfire_client.appfire import AppFire
 
 _LOGGER = logging.getLogger(__name__)
 

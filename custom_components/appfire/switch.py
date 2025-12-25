@@ -1,4 +1,4 @@
-"""Platform for sensor integration."""
+"""Platform for switch integration."""
 from __future__ import annotations
 
 import logging
@@ -9,7 +9,7 @@ from homeassistant.components.switch import (
 from homeassistant.helpers.update_coordinator import (
     CoordinatorEntity,
 )
-from homeassistant.const import UnitOfTemperature
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.core import callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -26,7 +26,7 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up the sensor entity."""
+    """Set up the switch entity."""
 
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
