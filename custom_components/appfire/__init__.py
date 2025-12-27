@@ -10,11 +10,15 @@ from homeassistant.core import HomeAssistant
 from .lib.appfire_client.appfire import AppFire
 from .coordinator import MyCoordinator
 
-from .const import DOMAIN
-from .const import CONF_IP
-from .const import CONF_PORT
-from .const import CONF_STOVE_NAME
-from .const import CONF_SERIAL
+from .const import (
+    DOMAIN,
+    CONF_IP,
+    CONF_PORT,
+    CONF_STOVE_NAME,
+    CONF_SERIAL,
+    CONF_POLLING_INTERVAL,
+    DEFAULT_SCAN_INTERVAL_S,
+)
 
 # TODO List the platforms that you want to support.
 # For your initial PR, limit it to 1 platform.
@@ -31,14 +35,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     appFireApi = AppFire(entry.data.get(CONF_IP), entry.data.get(CONF_PORT))
     stoveName = entry.data.get(CONF_STOVE_NAME)
     stoveSerial = entry.data.get(CONF_SERIAL)
+    polling_interval = entry.data.get(CONF_POLLING_INTERVAL, DEFAULT_SCAN_INTERVAL_S)
 
-    # TODO 2. Validate the API connection (and authentication)
-    # ...
-
-    # 3. Create data coordinator
+    # 2. Create data coordinator
     coordinator = MyCoordinator(hass, stoveName, stoveSerial, appFireApi, polling_interval)
 
-    # 4. Fetch initial data so we have data when entities subscribe
+    # 3. Fetch initial data so we have data when entities subscribe
     #    If the refresh fails, async_config_entry_first_refresh will
     #    raise ConfigEntryNotReady and setup will try again later
     await coordinator.async_config_entry_first_refresh()
@@ -46,9 +48,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # 4. Store the coordinator for your platforms to access
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = coordinator
-
-
-
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 

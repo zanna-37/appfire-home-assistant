@@ -27,7 +27,7 @@ _LOGGER = logging.getLogger(__name__)
 class MyCoordinator(DataUpdateCoordinator):
     """My custom coordinator."""
 
-    def __init__(self, hass, stoveName, stoveSerial, appFireApi):
+    def __init__(self, hass, stoveName, stoveSerial, appFireApi, polling_interval: int):
         """Initialize my coordinator."""
         super().__init__(
             hass,
@@ -35,7 +35,7 @@ class MyCoordinator(DataUpdateCoordinator):
             # Name of the data. For logging purposes.
             name="AppFireCoordinator",
             # Polling interval. Will only be polled if there are subscribers.
-            update_interval=timedelta(seconds=30),
+            update_interval=timedelta(seconds=polling_interval),
         )
         self.appFireApi = appFireApi
         self.stoveName = stoveName
