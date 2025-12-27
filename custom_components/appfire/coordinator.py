@@ -59,9 +59,14 @@ class MyCoordinator(DataUpdateCoordinator):
             dataInfo = await self.hass.async_add_executor_job(
                 self.appFireApi.getMessageInfo
             )
+            if dataInfo is None:
+                raise UpdateFailed("Failed to get primary data from stove (checksum error or no response)")
+
             dataInfo2 = await self.hass.async_add_executor_job(
                 self.appFireApi.getMessage2Info
             )
+            if dataInfo2 is None:
+                raise UpdateFailed("Failed to get secondary data from stove (checksum error or no response)")
 
             data = {}
             data[API_DATA_LOOKUP_STOVE_STATUS] = dataInfo.getStatus()
