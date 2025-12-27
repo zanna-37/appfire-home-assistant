@@ -44,6 +44,18 @@
             },
             "ambient_temperature": {
                 "name": "Ambient temperature"
+            },
+            "eco_mode": {
+                "name": "Eco mode"
+            },
+            "smoke_temperature": {
+                "name": "Smoke temperature"
+            },
+            "smoke_fan_rpm": {
+                "name": "Smoke fan speed"
+            },
+            "fan1_percentage": {
+                "name": "Fan 1 level"
             }
         },
         "switch": {
