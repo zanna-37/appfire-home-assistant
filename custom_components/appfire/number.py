@@ -10,7 +10,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN, API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE
-from .coordinator import MyCoordinator
+from .coordinator import AppFireCoordinator
 from .entity import AppFireEntity
 
 
@@ -37,7 +37,7 @@ class DesiredAmbientTemperature(AppFireEntity, NumberEntity):
     _attr_native_step = 0.1
     _attr_translation_key = "desired_ambient_temperature"
 
-    def __init__(self, coordinator: MyCoordinator):
+    def __init__(self, coordinator: AppFireCoordinator):
         """Initialize the number entity."""
         super().__init__(coordinator, context=API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE)
         self._idx = API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE

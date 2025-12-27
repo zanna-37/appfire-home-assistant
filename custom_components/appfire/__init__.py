@@ -8,7 +8,7 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
 from .lib.appfire_client.appfire import AppFire
-from .coordinator import MyCoordinator
+from .coordinator import AppFireCoordinator
 
 from .const import (
     DOMAIN,
@@ -36,7 +36,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     polling_interval = entry.data.get(CONF_POLLING_INTERVAL, DEFAULT_SCAN_INTERVAL_S)
 
     # 2. Create data coordinator
-    coordinator = MyCoordinator(hass, stoveName, stoveSerial, appFireApi, polling_interval)
+    coordinator = AppFireCoordinator(hass, stoveName, stoveSerial, appFireApi, polling_interval)
 
     # 3. Fetch initial data so we have data when entities subscribe
     #    If the refresh fails, async_config_entry_first_refresh will

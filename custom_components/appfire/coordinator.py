@@ -26,11 +26,11 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
-class MyCoordinator(DataUpdateCoordinator):
-    """My custom coordinator."""
+class AppFireCoordinator(DataUpdateCoordinator):
+    """Coordinator for AppFire stove data updates."""
 
     def __init__(self, hass, stoveName, stoveSerial, appFireApi, polling_interval: int):
-        """Initialize my coordinator."""
+        """Initialize the coordinator."""
         super().__init__(
             hass,
             _LOGGER,
