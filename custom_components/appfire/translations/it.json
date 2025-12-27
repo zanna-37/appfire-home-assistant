@@ -1,0 +1,45 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Il dispositivo è già configurato"
+        },
+        "error": {
+            "cannot_connect": "Connessione fallita",
+            "invalid_auth": "Autenticazione non valida",
+            "unknown": "Errore imprevisto"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "serial": "Numero di serie della stufa",
+                    "ip": "IP della stufa (deve essere statico)",
+                    "port": "Porta della stufa",
+                    "polling_interval": "Intervallo di aggiornamento in secondi"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "stove_status": {
+                "name": "Stato"
+            },
+            "power_percentage": {
+                "name": "Potenza"
+            },
+            "ambient_temperature": {
+                "name": "Temperatura ambiente"
+            }
+        },
+        "switch": {
+            "power_status": {
+                "name": "Accensione"
+            }
+        },
+        "number": {
+            "desired_ambient_temperature": {
+                "name": "Temperatura desiderata"
+            }
+        }
+    }
+}

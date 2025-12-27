@@ -8,22 +8,19 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorStateClass,
 )
-from homeassistant.helpers.update_coordinator import (
-    CoordinatorEntity,
-)
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import UnitOfTemperature
-from homeassistant.core import HomeAssistant
-from homeassistant.core import callback
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN
-from .const import API_DATA_LOOKUP_POWER_PERCENTAGE
-from .const import API_DATA_LOOKUP_AMBIENT_TEMPERATURE
-from .const import API_DATA_LOOKUP_STOVE_STATUS
-
-
+from .const import (
+    DOMAIN,
+    API_DATA_LOOKUP_POWER_PERCENTAGE,
+    API_DATA_LOOKUP_AMBIENT_TEMPERATURE,
+    API_DATA_LOOKUP_STOVE_STATUS,
+)
+from .entity import AppFireEntity
 from .lib.appfire_client.status.stove_status import StoveStatus as StoveStatusApi
-from homeassistant.config_entries import ConfigEntry
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -46,17 +43,17 @@ async def async_setup_entry(
     )
 
 
-class StoveStatus(CoordinatorEntity, SensorEntity):
-    _attr_native_unit_of_measurement = None
+class StoveStatus(AppFireEntity, SensorEntity):
+    """Sensor for stove status."""
+
     _attr_device_class = SensorDeviceClass.ENUM
+    _attr_translation_key = "stove_status"
 
     def __init__(self, coordinator):
-        """Pass coordinator to CoordinatorEntity."""
+        """Initialize the sensor."""
         super().__init__(coordinator, context=API_DATA_LOOKUP_STOVE_STATUS)
         self._idx = API_DATA_LOOKUP_STOVE_STATUS
-
-        self._attr_name = self.coordinator.getStoveNameOrSerial() + " status"
-        self._attr_unique_id = self.coordinator.stoveSerial + "_sensor" + "_status"
+        self._attr_unique_id = f"{self.coordinator.stoveSerial}_sensor_status"
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -66,19 +63,20 @@ class StoveStatus(CoordinatorEntity, SensorEntity):
         self.async_write_ha_state()
 
 
-class PowerPercentage(CoordinatorEntity, SensorEntity):
+class PowerPercentage(AppFireEntity, SensorEntity):
+    """Sensor for power percentage."""
+
     _attr_icon = "mdi:percent"
     _attr_native_unit_of_measurement = "%"
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_suggested_display_precision = 0
+    _attr_translation_key = "power_percentage"
 
     def __init__(self, coordinator):
-        """Pass coordinator to CoordinatorEntity."""
+        """Initialize the sensor."""
         super().__init__(coordinator, context=API_DATA_LOOKUP_POWER_PERCENTAGE)
         self._idx = API_DATA_LOOKUP_POWER_PERCENTAGE
-
-        self._attr_name = self.coordinator.getStoveNameOrSerial() + " power level"
-        self._attr_unique_id = self.coordinator.stoveSerial + "_sensor" + "_power_level"
+        self._attr_unique_id = f"{self.coordinator.stoveSerial}_sensor_power_level"
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -87,23 +85,20 @@ class PowerPercentage(CoordinatorEntity, SensorEntity):
         self.async_write_ha_state()
 
 
-class AmbientTemperature(CoordinatorEntity, SensorEntity):
+class AmbientTemperature(AppFireEntity, SensorEntity):
+    """Sensor for ambient temperature."""
+
     _attr_icon = "mdi:home-thermometer"
     _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
     _attr_device_class = SensorDeviceClass.TEMPERATURE
     _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_translation_key = "ambient_temperature"
 
     def __init__(self, coordinator):
-        """Pass coordinator to CoordinatorEntity."""
+        """Initialize the sensor."""
         super().__init__(coordinator, context=API_DATA_LOOKUP_AMBIENT_TEMPERATURE)
         self._idx = API_DATA_LOOKUP_AMBIENT_TEMPERATURE
-
-        self._attr_name = (
-            self.coordinator.getStoveNameOrSerial() + " ambient temperature"
-        )
-        self._attr_unique_id = (
-            self.coordinator.stoveSerial + "_sensor" + "_ambient_temperature"
-        )
+        self._attr_unique_id = f"{self.coordinator.stoveSerial}_sensor_ambient_temperature"
 
     @callback
     def _handle_coordinator_update(self) -> None:

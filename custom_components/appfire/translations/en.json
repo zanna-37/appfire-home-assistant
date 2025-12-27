@@ -18,5 +18,28 @@
                 }
             }
         }
+    },
+    "entity": {
+        "sensor": {
+            "stove_status": {
+                "name": "Status"
+            },
+            "power_percentage": {
+                "name": "Power level"
+            },
+            "ambient_temperature": {
+                "name": "Ambient temperature"
+            }
+        },
+        "switch": {
+            "power_status": {
+                "name": "Power"
+            }
+        },
+        "number": {
+            "desired_ambient_temperature": {
+                "name": "Desired temperature"
+            }
+        }
     }
 }
