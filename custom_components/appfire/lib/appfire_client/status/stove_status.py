@@ -19,6 +19,11 @@ class StoveStatus(IntEnum):
     CLEAN_BURNER = 70 # Called "Pul. bruc."
 
     @staticmethod
+    def getAllStatusTexts() -> list[str]:
+        """Return a list of all known status text values."""
+        return [StoveStatus.statusToText(status) for status in StoveStatus]
+
+    @staticmethod
     def statusToText(status: int) -> str:
         if status == StoveStatus.OFF:
             return "Off"
