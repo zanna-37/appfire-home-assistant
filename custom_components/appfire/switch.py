@@ -38,7 +38,7 @@ class PowerStatus(AppFireEntity, SwitchEntity):
         """Initialize the switch."""
         super().__init__(coordinator, context=API_DATA_LOOKUP_POWER_STATUS)
         self._idx = API_DATA_LOOKUP_POWER_STATUS
-        self._attr_unique_id = f"{self.coordinator.stoveSerial}_switch_power_status"
+        self._attr_unique_id = f"{self.coordinator.stove_serial}_switch_power_status"
 
     @property
     def icon(self) -> str:
@@ -53,10 +53,10 @@ class PowerStatus(AppFireEntity, SwitchEntity):
 
     async def async_turn_on(self, **kwargs) -> None:
         """Turn the entity on."""
-        await self.hass.async_add_executor_job(self.coordinator.appFireApi.turnOn)
+        await self.hass.async_add_executor_job(self.coordinator.api.turnOn)
         await self.coordinator.async_request_refresh()
 
     async def async_turn_off(self, **kwargs) -> None:
         """Turn the entity off."""
-        await self.hass.async_add_executor_job(self.coordinator.appFireApi.turnOff)
+        await self.hass.async_add_executor_job(self.coordinator.api.turnOff)
         await self.coordinator.async_request_refresh()

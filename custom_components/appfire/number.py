@@ -41,7 +41,7 @@ class DesiredAmbientTemperature(AppFireEntity, NumberEntity):
         """Initialize the number entity."""
         super().__init__(coordinator, context=API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE)
         self._idx = API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE
-        self._attr_unique_id = f"{self.coordinator.stoveSerial}_number_desired_ambient_temperature"
+        self._attr_unique_id = f"{self.coordinator.stove_serial}_number_desired_ambient_temperature"
 
     @property
     def native_min_value(self) -> float:
@@ -62,6 +62,6 @@ class DesiredAmbientTemperature(AppFireEntity, NumberEntity):
     async def async_set_native_value(self, value: float) -> None:
         """Set the desired ambient temperature."""
         await self.hass.async_add_executor_job(
-            self.coordinator.appFireApi.setDesiredAmbientTemperature, value
+            self.coordinator.api.setDesiredAmbientTemperature, value
         )
         await self.coordinator.async_request_refresh()

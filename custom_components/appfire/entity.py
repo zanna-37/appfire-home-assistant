@@ -13,7 +13,7 @@ class AppFireEntity(CoordinatorEntity[AppFireCoordinator]):
 
     _attr_has_entity_name = True
 
-    def __init__(self, coordinator: MyCoordinator, context: str) -> None:
+    def __init__(self, coordinator: AppFireCoordinator, context: str) -> None:
         """Initialize the entity."""
         super().__init__(coordinator, context=context)
 
@@ -21,8 +21,8 @@ class AppFireEntity(CoordinatorEntity[AppFireCoordinator]):
     def device_info(self) -> DeviceInfo:
         """Return device information about this AppFire stove."""
         return DeviceInfo(
-            identifiers={(DOMAIN, self.coordinator.stoveSerial)},
-            name=self.coordinator.getStoveNameOrSerial(),
+            identifiers={(DOMAIN, self.coordinator.stove_serial)},
+            name=self.coordinator.get_stove_name_or_serial(),
             manufacturer="AppFire",
             model="Pellet Stove",
         )

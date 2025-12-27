@@ -26,17 +26,16 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up AppFire from a config entry."""
-
-    _LOGGER.debug(f"[.] Entering async_setup_entry with entry_id: {entry.entry_id}")
+    _LOGGER.debug("Setting up AppFire entry: %s", entry.entry_id)
 
     # 1. Create API instance
-    appFireApi = AppFire(entry.data.get(CONF_IP), entry.data.get(CONF_PORT))
-    stoveName = entry.data.get(CONF_STOVE_NAME)
-    stoveSerial = entry.data.get(CONF_SERIAL)
+    api = AppFire(entry.data.get(CONF_IP), entry.data.get(CONF_PORT))
+    stove_name = entry.data.get(CONF_STOVE_NAME)
+    stove_serial = entry.data.get(CONF_SERIAL)
     polling_interval = entry.data.get(CONF_POLLING_INTERVAL, DEFAULT_SCAN_INTERVAL_S)
 
     # 2. Create data coordinator
-    coordinator = AppFireCoordinator(hass, stoveName, stoveSerial, appFireApi, polling_interval)
+    coordinator = AppFireCoordinator(hass, stove_name, stove_serial, api, polling_interval)
 
     # 3. Fetch initial data so we have data when entities subscribe
     #    If the refresh fails, async_config_entry_first_refresh will

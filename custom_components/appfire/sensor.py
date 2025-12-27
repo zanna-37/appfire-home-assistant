@@ -54,7 +54,7 @@ class StoveStatus(AppFireEntity, SensorEntity):
         """Initialize the sensor."""
         super().__init__(coordinator, context=API_DATA_LOOKUP_STOVE_STATUS)
         self._idx = API_DATA_LOOKUP_STOVE_STATUS
-        self._attr_unique_id = f"{self.coordinator.stoveSerial}_sensor_status"
+        self._attr_unique_id = f"{self.coordinator.stove_serial}_sensor_status"
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -80,7 +80,7 @@ class PowerPercentage(AppFireEntity, SensorEntity):
         """Initialize the sensor."""
         super().__init__(coordinator, context=API_DATA_LOOKUP_POWER_PERCENTAGE)
         self._idx = API_DATA_LOOKUP_POWER_PERCENTAGE
-        self._attr_unique_id = f"{self.coordinator.stoveSerial}_sensor_power_level"
+        self._attr_unique_id = f"{self.coordinator.stove_serial}_sensor_power_level"
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -102,7 +102,7 @@ class AmbientTemperature(AppFireEntity, SensorEntity):
         """Initialize the sensor."""
         super().__init__(coordinator, context=API_DATA_LOOKUP_AMBIENT_TEMPERATURE)
         self._idx = API_DATA_LOOKUP_AMBIENT_TEMPERATURE
-        self._attr_unique_id = f"{self.coordinator.stoveSerial}_sensor_ambient_temperature"
+        self._attr_unique_id = f"{self.coordinator.stove_serial}_sensor_ambient_temperature"
 
     @callback
     def _handle_coordinator_update(self) -> None:
