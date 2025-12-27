@@ -19,6 +19,21 @@
             }
         }
     },
+    "options": {
+        "error": {
+            "cannot_connect": "Connessione fallita",
+            "unknown": "Errore imprevisto"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "ip": "IP della stufa",
+                    "port": "Porta della stufa",
+                    "polling_interval": "Intervallo di aggiornamento in secondi"
+                }
+            }
+        }
+    },
     "entity": {
         "sensor": {
             "stove_status": {
