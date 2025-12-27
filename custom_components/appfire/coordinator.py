@@ -9,17 +9,19 @@ from homeassistant.helpers.update_coordinator import (
     UpdateFailed,
 )
 
-from .const import API_DATA_LOOKUP_STOVE_STATUS
-from .const import API_DATA_LOOKUP_POWER_STATUS
-from .const import API_DATA_LOOKUP_ECO_MODE
-from .const import API_DATA_LOOKUP_AMBIENT_TEMPERATURE
-from .const import API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE
-from .const import API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE_MIN
-from .const import API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE_MAX
-from .const import API_DATA_LOOKUP_SMOKE_TEMPERATURE
-from .const import API_DATA_LOOKUP_POWER_PERCENTAGE
-from .const import API_DATA_LOOKUP_SMOKE_FAN_RPM
-from .const import API_DATA_LOOKUP_FAN1_PERCENTAGE
+from .const import (
+    API_DATA_LOOKUP_STOVE_STATUS,
+    API_DATA_LOOKUP_POWER_STATUS,
+    API_DATA_LOOKUP_ECO_MODE,
+    API_DATA_LOOKUP_AMBIENT_TEMPERATURE,
+    API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE,
+    API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE_MIN,
+    API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE_MAX,
+    API_DATA_LOOKUP_SMOKE_TEMPERATURE,
+    API_DATA_LOOKUP_POWER_PERCENTAGE,
+    API_DATA_LOOKUP_SMOKE_FAN_RPM,
+    API_DATA_LOOKUP_FAN1_PERCENTAGE,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -91,11 +93,7 @@ class MyCoordinator(DataUpdateCoordinator):
 
             return data
 
-        # except ApiAuthError as err: # TODO zanna
-        #     # Raising ConfigEntryAuthFailed will cancel future updates
-        #     # and start a config flow with SOURCE_REAUTH (async_step_reauth)
-        #     raise ConfigEntryAuthFailed from err
-        # except ApiError as err: # TODO zanna
-        #     raise UpdateFailed(f"Error communicating with API: {err}")
         except Exception as err:
+            # Note: If authentication is added in the future, catch the auth error
+            # and raise ConfigEntryAuthFailed to trigger a reauth flow.
             raise UpdateFailed(f"Error communicating with API: {err}") from err

@@ -10,15 +10,16 @@ from homeassistant.config_entries import ConfigFlow as BaseConfigFlow, ConfigFlo
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 
-from .const import CONF_STOVE_NAME
-from .const import CONF_SERIAL
-from .const import CONF_IP
-from .const import CONF_PORT
-from .const import CONF_POLLING_INTERVAL
-from .const import DEFAULT_PORT
-from .const import DEFAULT_SCAN_INTERVAL_S
-from .const import DOMAIN
-
+from .const import (
+    CONF_STOVE_NAME,
+    CONF_SERIAL,
+    CONF_IP,
+    CONF_PORT,
+    CONF_POLLING_INTERVAL,
+    DEFAULT_PORT,
+    DEFAULT_SCAN_INTERVAL_S,
+    DOMAIN,
+)
 from .lib.appfire_client.appfire import AppFire
 
 
@@ -88,31 +89,18 @@ class ConfigFlow(BaseConfigFlow, domain=DOMAIN):
         )
 
 
-async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
+async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> None:
     """Validate the user input allows us to connect.
 
     Data has the keys from STEP_USER_SCHEMA with values provided by the user.
     """
+    appfire = AppFire(data[CONF_IP], data[CONF_PORT])
 
-    appfire = AppFire(data["ip"], data["port"])
-
-    # If your PyPI package is not built with async, pass your methods
-    # to the executor:
     if not await hass.async_add_executor_job(appfire.isOnline):
         raise CannotConnect
 
-    # hub = PlaceholderHub(data["host"])
-
-    # if not await hub.authenticate(data["username"], data["password"]):
-    #     raise InvalidAuth
-
-    # If you cannot connect:
-    # throw CannotConnect
-    # If the authentication is wrong:
-    # InvalidAuth
-
-    # Return info that you want to store in the config entry.
-    return None
+    # Note: If authentication is added in the future, validate credentials here
+    # and raise InvalidAuth on failure.
 
 
 class CannotConnect(HomeAssistantError):
