@@ -36,7 +36,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # ...
 
     # 3. Create data coordinator
-    coordinator = MyCoordinator(hass, stoveName, stoveSerial, appFireApi)
+    coordinator = MyCoordinator(hass, stoveName, stoveSerial, appFireApi, polling_interval)
+
+    # 4. Fetch initial data so we have data when entities subscribe
+    #    If the refresh fails, async_config_entry_first_refresh will
+    #    raise ConfigEntryNotReady and setup will try again later
+    await coordinator.async_config_entry_first_refresh()
 
     # 4. Store the coordinator for your platforms to access
     hass.data.setdefault(DOMAIN, {})
