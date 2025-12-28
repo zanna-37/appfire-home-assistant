@@ -58,7 +58,7 @@ class StoveStatus(AppFireEntity, SensorEntity):
     """Sensor for stove status."""
 
     _attr_device_class = SensorDeviceClass.ENUM
-    _attr_options = StoveStatusApi.getAllStatusTexts()
+    _attr_options = StoveStatusApi.get_all_status_keys()
     _attr_translation_key = "stove_status"
 
     def __init__(self, coordinator):
@@ -71,10 +71,11 @@ class StoveStatus(AppFireEntity, SensorEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         status_code = self.coordinator.data[self._idx]
-        # Note: Unknown status codes will show "Unknown status X" and cause HA warnings
-        # since they won't match the predefined options. This is intentional to preserve
-        # the status code for debugging.
-        self._attr_native_value = StoveStatusApi.statusToText(status_code)
+        # Returns translation key (e.g., "off", "on", "cooling_down").
+        # Unknown status codes will return "unknown_X" and cause HA warnings
+        # since they won't match the predefined options. This is intentional
+        # to preserve the status code for debugging.
+        self._attr_native_value = StoveStatusApi.status_to_key(status_code)
         self.async_write_ha_state()
 
 

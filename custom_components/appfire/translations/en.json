@@ -37,7 +37,23 @@
     "entity": {
         "sensor": {
             "stove_status": {
-                "name": "Status"
+                "name": "Status",
+                "state": {
+                    "off": "Off",
+                    "checking_before_start": "Checking before start",
+                    "cleaning_before_start": "Cleaning before start",
+                    "preloading": "Preloading",
+                    "waiting_fire": "Waiting fire",
+                    "start_burning": "Start burning",
+                    "stabilization": "Stabilization",
+                    "on": "On",
+                    "turning_off": "Turning off",
+                    "cooling_down": "Cooling down",
+                    "warning_low_pellet": "Warning: Low pellet",
+                    "error_end_pellet": "Error: End pellet",
+                    "error_screw_jammed": "Error: Screw jammed",
+                    "clean_burner": "Clean burner"
+                }
             },
             "power_percentage": {
                 "name": "Power level"

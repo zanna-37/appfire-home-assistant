@@ -37,7 +37,23 @@
     "entity": {
         "sensor": {
             "stove_status": {
-                "name": "Stato"
+                "name": "Stato",
+                "state": {
+                    "off": "Spenta",
+                    "checking_before_start": "Controllo pre-avvio",
+                    "cleaning_before_start": "Pulizia pre-avvio",
+                    "preloading": "Caricamento",
+                    "waiting_fire": "Attesa fiamma",
+                    "start_burning": "Accensione",
+                    "stabilization": "Stabilizzazione",
+                    "on": "Accesa",
+                    "turning_off": "Spegnimento",
+                    "cooling_down": "Raffreddamento",
+                    "warning_low_pellet": "Attenzione: Pellet in esaurimento",
+                    "error_end_pellet": "Errore: Pellet esaurito",
+                    "error_screw_jammed": "Errore: Coclea bloccata",
+                    "clean_burner": "Pulire bruciatore"
+                }
             },
             "power_percentage": {
                 "name": "Potenza"
