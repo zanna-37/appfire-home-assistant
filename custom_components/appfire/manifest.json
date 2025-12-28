@@ -4,7 +4,7 @@
   "codeowners": [
     "@zanna-37"
   ],
-  "version": "0.0.1",
+  "version": "0.1.0",
   "config_flow": true,
   "dependencies": [],
   "integration_type": "device",
