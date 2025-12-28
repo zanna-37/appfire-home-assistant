@@ -1,6 +1,6 @@
-homeassistant>=2023.11.0
+homeassistant>=2024.4.0
 
-pre-commit==3.5.0
-pylint==3.0.2
+pre-commit==4.5.1
+pylint==4.0.4
 
 #pytest-homeassistant-custom-component==0.4.4

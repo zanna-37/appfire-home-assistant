@@ -1,0 +1,11 @@
+services:
+  homeassistant:
+    image: homeassistant/home-assistant:stable
+    stdin_open: true
+    tty: true
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8123:8123"
+    command: bash

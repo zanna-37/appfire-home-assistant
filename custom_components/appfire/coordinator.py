@@ -1,102 +1,86 @@
-"""Platform for number integration."""
+"""Data coordinator for AppFire integration."""
 from __future__ import annotations
-from homeassistant.components.light import LightEntity
-from homeassistant.core import callback
-from homeassistant.exceptions import ConfigEntryAuthFailed
+
+import logging
+from datetime import timedelta
+
 from homeassistant.helpers.update_coordinator import (
-    CoordinatorEntity,
     DataUpdateCoordinator,
     UpdateFailed,
 )
-from datetime import timedelta
-import logging
 
-from .const import DOMAIN
-
-from .const import API_DATA_LOOKUP_STOVE_STATUS
-from .const import API_DATA_LOOKUP_POWER_STATUS
-from .const import API_DATA_LOOKUP_ECO_MODE
-from .const import API_DATA_LOOKUP_AMBIENT_TEMPERATURE
-from .const import API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE
-from .const import API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE_MIN
-from .const import API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE_MAX
-from .const import API_DATA_LOOKUP_SMOKE_TEMPERATURE
-from .const import API_DATA_LOOKUP_POWER_PERCENTAGE
-from .const import API_DATA_LOOKUP_SMOKE_FAN_RPM
-from .const import API_DATA_LOOKUP_FAN1_PERCENTAGE
-
-from .lib.appfire_client.appfire import AppFire
+from .const import (
+    API_DATA_LOOKUP_STOVE_STATUS,
+    API_DATA_LOOKUP_POWER_STATUS,
+    API_DATA_LOOKUP_ECO_MODE,
+    API_DATA_LOOKUP_AMBIENT_TEMPERATURE,
+    API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE,
+    API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE_MIN,
+    API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE_MAX,
+    API_DATA_LOOKUP_SMOKE_TEMPERATURE,
+    API_DATA_LOOKUP_POWER_PERCENTAGE,
+    API_DATA_LOOKUP_SMOKE_FAN_RPM,
+    API_DATA_LOOKUP_FAN1_PERCENTAGE,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class MyCoordinator(DataUpdateCoordinator):
-    """My custom coordinator."""
+class AppFireCoordinator(DataUpdateCoordinator):
+    """Coordinator for AppFire stove data updates."""
 
-    def __init__(self, hass, stoveName, stoveSerial, appFireApi):
-        """Initialize my coordinator."""
+    def __init__(self, hass, stove_name, stove_serial, api, polling_interval: int):
+        """Initialize the coordinator."""
         super().__init__(
             hass,
             _LOGGER,
             # Name of the data. For logging purposes.
             name="AppFireCoordinator",
             # Polling interval. Will only be polled if there are subscribers.
-            update_interval=timedelta(seconds=30),
+            update_interval=timedelta(seconds=polling_interval),
         )
-        self.appFireApi = appFireApi
-        self.stoveName = stoveName
-        self.stoveSerial = stoveSerial
+        self.api = api
+        self.stove_name = stove_name
+        self.stove_serial = stove_serial
 
-    def getStoveNameOrSerial(self):
-        if self.stoveName is not None:
-            return self.stoveName
-        else:
-            return self.stoveSerial
+    def get_stove_name_or_serial(self):
+        """Return stove name if set, otherwise serial."""
+        if self.stove_name is not None:
+            return self.stove_name
+        return self.stove_serial
 
     async def _async_update_data(self):
-        """Fetch data from API endpoint.
-
-        This is the place to pre-process the data to lookup tables
-        so entities can quickly look up their data.
-        """
+        """Fetch data from API endpoint."""
         try:
-            _LOGGER.debug("Entering _async_update_data")
+            _LOGGER.debug("Fetching data from stove")
 
-            dataInfo = await self.hass.async_add_executor_job(
-                self.appFireApi.getMessageInfo
+            primary_data = await self.hass.async_add_executor_job(
+                self.api.getMessageInfo
             )
-            dataInfo2 = await self.hass.async_add_executor_job(
-                self.appFireApi.getMessage2Info
+            if primary_data is None:
+                raise UpdateFailed("Failed to get primary data from stove (checksum error or no response)")
+
+            secondary_data = await self.hass.async_add_executor_job(
+                self.api.getMessage2Info
             )
+            if secondary_data is None:
+                raise UpdateFailed("Failed to get secondary data from stove (checksum error or no response)")
 
-            data = {}
-            data[API_DATA_LOOKUP_STOVE_STATUS] = dataInfo.getStatus()
-            data[API_DATA_LOOKUP_POWER_STATUS] = dataInfo.isOn()
-            data[API_DATA_LOOKUP_ECO_MODE] = dataInfo.isEcoMode()
-            data[API_DATA_LOOKUP_AMBIENT_TEMPERATURE] = dataInfo.getAmbientTemperature()
-            data[
-                API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE
-            ] = dataInfo.getDesiredAmbientTemperature()
-            data[
-                API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE_MIN
-            ] = dataInfo.getDesiredAmbientTemperatureMin()
-            data[
-                API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE_MAX
-            ] = dataInfo.getDesiredAmbientTemperatureMax()
-            data[API_DATA_LOOKUP_SMOKE_TEMPERATURE] = dataInfo.getSmokeTemperature()
-            data[API_DATA_LOOKUP_POWER_PERCENTAGE] = dataInfo.getPowerPercentage()
-            data[API_DATA_LOOKUP_SMOKE_FAN_RPM] = dataInfo.getSmokeFanRpm()
-            data[API_DATA_LOOKUP_FAN1_PERCENTAGE] = dataInfo2.getFan1Percentage()
+            return {
+                API_DATA_LOOKUP_STOVE_STATUS: primary_data.getStatus(),
+                API_DATA_LOOKUP_POWER_STATUS: primary_data.isOn(),
+                API_DATA_LOOKUP_ECO_MODE: primary_data.isEcoMode(),
+                API_DATA_LOOKUP_AMBIENT_TEMPERATURE: primary_data.getAmbientTemperature(),
+                API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE: primary_data.getDesiredAmbientTemperature(),
+                API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE_MIN: primary_data.getDesiredAmbientTemperatureMin(),
+                API_DATA_LOOKUP_DESIRED_AMBIENT_TEMPERATURE_MAX: primary_data.getDesiredAmbientTemperatureMax(),
+                API_DATA_LOOKUP_SMOKE_TEMPERATURE: primary_data.getSmokeTemperature(),
+                API_DATA_LOOKUP_POWER_PERCENTAGE: primary_data.getPowerPercentage(),
+                API_DATA_LOOKUP_SMOKE_FAN_RPM: primary_data.getSmokeFanRpm(),
+                API_DATA_LOOKUP_FAN1_PERCENTAGE: secondary_data.getFan1Percentage(),
+            }
 
-            _LOGGER.debug(f"Exiting _async_update_data")
-
-            return data
-
-        # except ApiAuthError as err: # TODO zanna
-        #     # Raising ConfigEntryAuthFailed will cancel future updates
-        #     # and start a config flow with SOURCE_REAUTH (async_step_reauth)
-        #     raise ConfigEntryAuthFailed from err
-        # except ApiError as err: # TODO zanna
-        #     raise UpdateFailed(f"Error communicating with API: {err}")
         except Exception as err:
+            # Note: If authentication is added in the future, catch the auth error
+            # and raise ConfigEntryAuthFailed to trigger a reauth flow.
             raise UpdateFailed(f"Error communicating with API: {err}") from err
