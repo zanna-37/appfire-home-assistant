@@ -17,7 +17,7 @@ jobs:
     runs-on: "ubuntu-latest"
     name: Validate with HACS
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: "actions/checkout@v6"
 
       - name: HACS validation
         uses: "hacs/action@main"
@@ -28,7 +28,7 @@ jobs:
     runs-on: "ubuntu-latest"
     name: Validate with Hassfest
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: "actions/checkout@v6"
 
       - name: Hassfest validation
         uses: "home-assistant/actions/hassfest@master"
@@ -37,7 +37,7 @@ jobs:
     runs-on: "ubuntu-latest"
     name: Check code quality
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: "actions/checkout@v6"
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
         id: python
         uses: actions/setup-python@v4
@@ -68,7 +68,7 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - name: 📥 Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: 📦 Create zip file for the integration
         run: |
